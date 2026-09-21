@@ -16,8 +16,16 @@ python src/main.py "http://verify-account.example-login-security.test"
 python -m unittest discover -s tests -v
 ```
 
+## Testing
+
+| Test type | What is checked | Result |
+| --- | --- | --- |
+| White-box | URL syntax features and classification logic | Pass |
+| Black-box | Command-line input and JSON output | Pass |
+| Automated CI | Full suite on pushes and pull requests | GitHub Actions |
+
+The tests use reserved `.test` domains and documentation IP ranges only. The classifier never opens, resolves, or visits a submitted URL.
+
 ## Important limitations
 
-This is an educational, syntax-only classifier. It does not visit URLs or use live reputation, DNS, TLS, content, or threat-intelligence signals. It cannot establish that a URL is safe or malicious and must not be used as the sole basis for a security decision.
-
-All suspicious examples use reserved `.test` domains and documentation IP ranges.
+This is an educational, syntax-only classifier. It does not use live reputation, DNS, TLS, content, or threat-intelligence signals. It cannot establish that a URL is safe or malicious and must not be used as the sole basis for a security decision.
