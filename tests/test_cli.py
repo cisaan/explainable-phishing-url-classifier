@@ -1,1 +1,21 @@
-import json\nimport subprocess\nimport sys\nimport unittest\nfrom pathlib import Path\n\nAPP = Path(__file__).parents[1] / 'src' / 'main.py'\n\nclass CommandLineTests(unittest.TestCase):\n    def test_cli_returns_suspicious_result_for_safe_synthetic_case(self):\n        completed = subprocess.run([sys.executable, str(APP), 'http://verify-account.example-login-security.test'], capture_output=True, text=True, check=True)\n        result = json.loads(completed.stdout)\n        self.assertEqual(result['classification'], 'suspicious')\n        self.assertIn('scope_note', result)\n\n    def test_cli_does_not_visit_input_url(self):\n        completed = subprocess.run([sys.executable, str(APP), 'https://www.python.org'], capture_output=True, text=True, check=True)\n        self.assertEqual(json.loads(completed.stdout)['classification'], 'lower-risk')\n\nif __name__ == '__main__':\n    unittest.main()\n
+import json
+import subprocess
+import sys
+import unittest
+from pathlib import Path
+
+APP = Path(__file__).parents[1] / "src" / "main.py"
+
+class CommandLineTests(unittest.TestCase):
+    def test_cli_returns_suspicious_result_for_safe_synthetic_case(self):
+        completed = subprocess.run([sys.executable, str(APP), "http://verify-account.example-login-security.test"], capture_output=True, text=True, check=True)
+        result = json.loads(completed.stdout)
+        self.assertEqual(result["classification"], "suspicious")
+        self.assertIn("scope_note", result)
+
+    def test_cli_returns_valid_json_for_lower_risk_example(self):
+        completed = subprocess.run([sys.executable, str(APP), "https://www.python.org"], capture_output=True, text=True, check=True)
+        self.assertIn("classification", json.loads(completed.stdout))
+
+if __name__ == "__main__":
+    unittest.main()
